@@ -1,12 +1,12 @@
 model Payment {
-  id            String        @id @default(uuid())
-  bookingId     String        @unique 
-  transactionId String        @unique
+  id            String          @id @default(uuid())
+  bookingId     String          @unique
+  transactionId String          @unique
   provider      PaymentProvider
-  amount        Decimal       @db.Decimal(10, 2)
-  status        PaymentStatus @default(PENDING)
-  paidAt        DateTime?    
-  createdAt     DateTime      @default(now())
+  amount        Decimal         @db.Decimal(10, 2)
+  status        PaymentStatus   @default(PENDING)
+  paidAt        DateTime?
+  createdAt     DateTime        @default(now())
 
   // Relationships
   booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)

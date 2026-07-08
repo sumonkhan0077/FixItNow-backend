@@ -1,6 +1,6 @@
 model Review {
-  id                  String   @id @default(uuid()) 
-  bookingId           String   @unique 
+  id                  String   @id @default(uuid())
+  bookingId           String   @unique
   customerId          String
   technicianProfileId String
   rating              Int

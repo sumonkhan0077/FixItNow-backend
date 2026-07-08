@@ -1,12 +1,12 @@
 model Service {
-  id                  String            @id @default(uuid())
+  id                  String   @id @default(uuid())
   technicianProfileId String
   categoryId          String
   title               String
   description         String?
-  price               Decimal           @db.Decimal(10, 2)
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @updatedAt
+  price               Decimal  @db.Decimal(10, 2)
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
 
   // Relationships
   technicianProfile TechnicianProfile @relation(fields: [technicianProfileId], references: [id], onDelete: Cascade)
