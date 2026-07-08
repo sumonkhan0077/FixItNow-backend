@@ -7,11 +7,11 @@ const router = Router();
 
 router.post("/register", userController.registerUser )
 
-// router.get("/me",
+router.get("/me",
 
-// auth(Role.ADMIN, Role.CUSTOMER, Role.TECHNICIAN),
+auth(Role.ADMIN, Role.CUSTOMER, Role.TECHNICIAN),
 
-// userController.getMyProfile);
+userController.getMyProfile);
 
 
 // router.put("/my-profile",
