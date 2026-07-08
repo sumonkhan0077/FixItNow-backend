@@ -26,7 +26,34 @@ const createTechnicianProfileIntoDB = async (
   return result;
 };
 
+
+
+const updateTechnicianProfileIntoDB = async (
+  userId: string,
+  payload: Partial<CreateTechnicianProfilePayload>
+) => {
+  
+  const isProfileExist = await prisma.technicianProfile.findUniqueOrThrow({
+    where: {
+      userId,
+    },
+  });
+
+  // Update Profile
+  const updatedProfile = await prisma.technicianProfile.update({
+    where: {
+      userId,
+    },
+    data: {
+      ...payload,
+    },
+  });
+
+  return updatedProfile;
+};
+
 export const technicianProfileService = {
   createTechnicianProfileIntoDB,
-//   updateTechnicianProfileIntoDB,
+  updateTechnicianProfileIntoDB,
 };
+

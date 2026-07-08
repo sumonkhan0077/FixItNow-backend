@@ -7,6 +7,12 @@ const router = Router();
 router.post("/create",  auth("TECHNICIAN"),
   technicianProfileController.createTechnicianProfile )
 
+  router.patch(
+  "/update-profile",
+  auth("TECHNICIAN"),
+  technicianProfileController.updateTechnicianProfile
+);
+
 
 
 export const technicianProfileRoutes = router;
