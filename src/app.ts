@@ -33,7 +33,7 @@ app.use("/api/users", userRoutes)
 app.use("/api/technician-profile", technicianProfileRoutes)
 app.use("/api/categories", categoriesRoutes)
 app.use("/api/services", servicesRoutes)
-app.use("/api/booking", bookingRoutes)
+app.use("/api/bookings", bookingRoutes)
 
 
 

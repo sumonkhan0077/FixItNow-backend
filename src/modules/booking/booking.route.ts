@@ -10,4 +10,16 @@ router.post(
   bookingController.createBooking
 );
 
+router.patch(
+  "/:id/cancel",
+  auth("CUSTOMER"),
+  bookingController.cancelBooking
+);
+
+router.patch(
+  "/update-status/:id",
+  auth('TECHNICIAN'),
+  bookingController.updateBookingStatus
+);
+
 export const bookingRoutes = router;
