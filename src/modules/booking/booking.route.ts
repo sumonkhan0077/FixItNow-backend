@@ -6,19 +6,19 @@ const router = Router();
 
 router.post(
   "/Create",
-  auth("CUSTOMER"),
+  auth("CUSTOMER", "ADMIN"),
   bookingController.createBooking
 );
 
 router.patch(
   "/:id/cancel",
-  auth("CUSTOMER"),
+  auth("CUSTOMER", "ADMIN"),
   bookingController.cancelBooking
 );
 
 router.patch(
   "/update-status/:id",
-  auth('TECHNICIAN'),
+  auth('TECHNICIAN', "ADMIN"),
   bookingController.updateBookingStatus
 );
 

@@ -14,8 +14,5 @@ auth(Role.ADMIN, Role.CUSTOMER, Role.TECHNICIAN),
 userController.getMyProfile);
 
 
-// router.put("/my-profile",
-//      auth(Role.ADMIN,  Role.CUSTOMER, Role.TECHNICIAN), 
-//      userController.updateMyProfile);
 
 export const userRoutes = router;

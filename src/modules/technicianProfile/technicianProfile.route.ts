@@ -4,12 +4,12 @@ import { technicianProfileController } from "./technicianProfile.controller";
 
 const router = Router();
 
-router.post("/create",  auth("TECHNICIAN"),
+router.post("/create",  auth("TECHNICIAN", "ADMIN"),
   technicianProfileController.createTechnicianProfile )
 
   router.patch(
   "/update-profile",
-  auth("TECHNICIAN"),
+  auth("TECHNICIAN", "ADMIN"),
   technicianProfileController.updateTechnicianProfile
 );
 

@@ -4,16 +4,16 @@ import { auth } from "../../middlewares/auth";
 
 const router = Router();
 
-router.post("/create", auth("TECHNICIAN"), serviceController.createService);
+router.post("/create", auth("TECHNICIAN", "ADMIN"), serviceController.createService);
 
 router.get("/all", serviceController.getAllServices);
 
-router.get("/my-service", auth("TECHNICIAN"), serviceController.getMyServices);
+router.get("/my-service", auth("TECHNICIAN", "ADMIN"), serviceController.getMyServices);
 
 
 router.patch(
   "/:id",
-  auth("TECHNICIAN",),
+  auth("TECHNICIAN", "ADMIN"),
   serviceController.updateService
 );
 
