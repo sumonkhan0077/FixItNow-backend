@@ -85,6 +85,79 @@ const createReviewIntoDB = async (
   return review;
 };
 
+const deleteReviewFromDB = async (reviewId: string) => {
+  // Review আছে কিনা
+  const review = await prisma.review.findUnique({
+    where: {
+      id: reviewId,
+    },
+  });
+
+  if (!review) {
+    throw new Error("Review not found");
+  }
+
+  // আগে Delete করো
+  await prisma.review.delete({
+    where: {
+      id: reviewId,
+    },
+  });
+
+  // বাকি Review-এর Average বের করো
+  const result = await prisma.review.aggregate({
+    where: {
+      technicianProfileId: review.technicianProfileId,
+    },
+    _avg: {
+      rating: true,
+    },
+  });
+
+  // Technician Profile Update
+  await prisma.technicianProfile.update({
+    where: {
+      id: review.technicianProfileId,
+    },
+    data: {
+      averageRating: result._avg.rating ?? 0,
+    },
+  });
+
+  return null;
+};
+
+
+const getSingleReviewFromDB = async (reviewId: string) => {
+  const review = await prisma.review.findUniqueOrThrow({
+    where: {
+      id: reviewId,
+    },
+    include: {
+      customer: {
+        omit: {
+          password: true,
+        },
+      },
+      technicianProfile: {
+        include: {
+          user: {
+            omit: {
+              password: true,
+            },
+          },
+        },
+      },
+      booking: true,
+    },
+  });
+
+  return review;
+};
+
+
 export const reviewService = {
   createReviewIntoDB,
+  deleteReviewFromDB,
+  getSingleReviewFromDB,
 };
