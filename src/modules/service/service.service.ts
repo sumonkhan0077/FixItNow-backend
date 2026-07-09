@@ -1,7 +1,7 @@
 import { Prisma } from "../../../generated/prisma/client";
 import { ServiceScalarWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
-import { CreateServicePayload, IServicesQuery } from "./service.interface";
+import { CreateServicePayload, IServicesQuery, UpdateServicePayload } from "./service.interface";
 
 const createServiceIntoDB = async (
   userId: string,
@@ -188,10 +188,58 @@ const getMyServicesFromDB = async (userId: string) => {
 };
 
 
+const updateServiceIntoDB = async (
+  userId: string,
+  serviceId: string,
+  payload: UpdateServicePayload
+) => {
+  // Technician Profile 
+  const technicianProfile =
+    await prisma.technicianProfile.findUniqueOrThrow({
+      where: {
+        userId,
+      },
+    });
+
+  
+  const service = await prisma.service.findFirstOrThrow({
+    where: {
+      id: serviceId,
+      technicianProfileId: technicianProfile.id,
+    },
+  });
+
+  // check Category have, 
+ const category = await prisma.category.findUnique({
+  where: {
+    id: payload.categoryId,
+  },
+});
+
+if (!category) {
+  throw new Error("Category not found");
+}
+
+  // Update
+  const result = await prisma.service.update({
+    where: {
+      id: service.id,
+    },
+    data: payload,
+    include: {
+      category: true,
+    },
+  });
+
+  return result;
+};
+
+
 
 
 export const serviceService = {
   createServiceIntoDB,
   getAllServicesFromDB,
   getMyServicesFromDB,
+  updateServiceIntoDB,
 };

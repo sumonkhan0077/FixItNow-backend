@@ -8,6 +8,14 @@ export type CreateServicePayload = {
 };
 
 
+export type UpdateServicePayload = {
+  title?: string;
+  description?: string;
+  price?: number;
+  categoryId?: string;
+};
+
+
 export interface IServicesQuery {
   searchTerm?: string;
   categoryId?: string;

@@ -10,4 +10,11 @@ router.get("/all", serviceController.getAllServices);
 
 router.get("/my-service", auth("TECHNICIAN"), serviceController.getMyServices);
 
+
+router.patch(
+  "/:id",
+  auth("TECHNICIAN",),
+  serviceController.updateService
+);
+
 export const servicesRoutes = router;
