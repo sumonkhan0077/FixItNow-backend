@@ -8,6 +8,7 @@ import { authRoutes } from "./modules/auth/auth.route";
 import { userRoutes } from "./modules/user/user.route";
 import { technicianProfileRoutes } from "./modules/technicianProfile/technicianProfile.route";
 import { categoriesRoutes } from "./modules/category/category.route";
+import { servicesRoutes } from "./modules/service/service.route";
 
 
 const app : Application = express();
@@ -29,7 +30,8 @@ app.get("/",(req : Request, res : Response) => {
 app.use("/api/auth", authRoutes)
 app.use("/api/users", userRoutes)
 app.use("/api/technician-profile", technicianProfileRoutes)
-app.use("/api/categories", categoriesRoutes )
+app.use("/api/categories", categoriesRoutes)
+app.use("/api/services", servicesRoutes)
 
 
 
