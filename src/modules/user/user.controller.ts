@@ -33,8 +33,39 @@ const getMyProfile = catchAsync( async (req: Request, res: Response, next: NextF
     })
 })
 
+
+const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const result = await userService.getAllUsersFromDB(req.query);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Users retrieved successfully",
+    data: result.data,
+    meta: result.meta,
+  });
+});
+
+const updateUserStatus = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await userService.updateUserStatusIntoDB(
+      req.params.id as string,
+      req.body
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "User status updated successfully",
+      data: result,
+    });
+  }
+);
+
+
 export const userController = {
     registerUser,
-    getMyProfile
-    
+    getMyProfile,    
+    getAllUsers,
+    updateUserStatus,
 }

@@ -13,6 +13,16 @@ auth(Role.ADMIN, Role.CUSTOMER, Role.TECHNICIAN),
 
 userController.getMyProfile);
 
+router.get(
+  "/all-users",
+  auth(Role.ADMIN),
+  userController.getAllUsers
+);
 
+router.patch(
+  "/status/:id",
+  auth(Role.ADMIN),
+  userController.updateUserStatus
+);
 
 export const userRoutes = router;

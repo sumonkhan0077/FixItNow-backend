@@ -1,7 +1,8 @@
 import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import config from "../../config";
-import { RegisterUserPayload } from "./user.interface";
+import { IUserQuery, RegisterUserPayload, UpdateUserStatusPayload } from "./user.interface";
+import { Prisma } from "../../../generated/prisma/browser";
 
 const registerUserIntoDB = async (payload: RegisterUserPayload) => {
   const { name, email, password, role , profileImage } = payload;
@@ -63,11 +64,112 @@ const getMyProfileFromDB = async (userId: string) => {
 
   return user;
 
-  return user;
+};
+
+
+const getAllUsersFromDB = async (query: IUserQuery) => {
+  const limit = query.limit ? Number(query.limit) : 10;
+  const page = query.page ? Number(query.page) : 1;
+  const skip = (page - 1) * limit;
+
+  const sortBy = query.sortBy || "createdAt";
+  const sortOrder = query.sortOrder || "desc";
+
+  const andConditions: Prisma.UserWhereInput[] = [];
+
+  // Search
+  if (query.searchTerm) {
+    andConditions.push({
+      OR: [
+        {
+          name: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+        {
+          email: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+      ],
+    });
+  }
+
+  // Role Filter
+  if (query.role) {
+    andConditions.push({
+      role: query.role as any,
+    });
+  }
+
+  // Status Filter
+  if (query.status) {
+    andConditions.push({
+      status: query.status as any,
+    });
+  }
+
+  const whereConditions: Prisma.UserWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
+
+  const data = await prisma.user.findMany({
+    where: whereConditions,
+    omit: {
+      password: true,
+    },
+    skip,
+    take: limit,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+  });
+
+  const total = await prisma.user.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data,
+  };
+};
+
+
+const updateUserStatusIntoDB = async (
+  userId: string,
+  payload: UpdateUserStatusPayload
+) => {
+  
+  await prisma.user.findUniqueOrThrow({
+    where: {
+      id: userId,
+    },
+  });
+
+  const result = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      status: payload.status,
+    },
+    omit: {
+      password: true,
+    },
+  });
+
+  return result;
 };
 
 export const userService = {
   registerUserIntoDB,
   getMyProfileFromDB,
-  // updateMyProfileInDB
+  getAllUsersFromDB,
+  updateUserStatusIntoDB,
 };

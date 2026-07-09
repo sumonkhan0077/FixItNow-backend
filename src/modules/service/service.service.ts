@@ -234,6 +234,39 @@ if (!category) {
   return result;
 };
 
+const getSingleServiceFromDB = async (serviceId: string) => {
+  const service = await prisma.service.findUniqueOrThrow({
+    where: {
+      id: serviceId,
+    },
+    include: {
+      category: true,
+      technicianProfile: {
+        include: {
+          user: {
+            omit: {
+              password: true,
+            },
+          },
+          reviews: {
+            include: {
+              customer: {
+                omit: {
+                  password: true,
+                },
+              },
+            },
+            orderBy: {
+              createdAt: "desc",
+            },
+          },
+        },
+      },
+    },
+  });
+
+  return service;
+};
 
 
 
@@ -242,4 +275,5 @@ export const serviceService = {
   getAllServicesFromDB,
   getMyServicesFromDB,
   updateServiceIntoDB,
+  getSingleServiceFromDB
 };
