@@ -1,3 +1,4 @@
+import { Prisma } from "../../../generated/prisma/client";
 import { ServiceScalarWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 import { CreateServicePayload, IServicesQuery } from "./service.interface";
@@ -49,8 +50,8 @@ const getAllServicesFromDB = async (query: IServicesQuery) => {
   const sortBy = query.sortBy || "createdAt";
   const sortOrder = query.sortOrder || "desc";
 
-  const andConditions : ServiceScalarWhereInput[] = []
-//   const andConditions: Prisma.ServicesWhereInput[] = [];
+//   const andConditions : ServiceScalarWhereInput[] = []
+  const andConditions: Prisma.ServiceWhereInput[]= []; 
 
 
  //search kora
@@ -80,7 +81,40 @@ const getAllServicesFromDB = async (query: IServicesQuery) => {
       categoryId: query.categoryId,
     });
   }
-  
+
+
+   // Price Filter
+  if(query.minPrice || query.maxPrice){
+     andConditions.push({
+        price: {
+             gte: query.minPrice ? Number(query.minPrice) : undefined,
+             lte: query.maxPrice ? Number(query.maxPrice) : undefined,
+        }
+     })
+  }
+
+   // Service Area Filter
+  if (query.serviceArea) {
+    andConditions.push({
+      technicianProfile: {
+        serviceArea: {
+          contains: query.serviceArea,
+          mode: "insensitive",
+        },
+      }, 
+    });
+  }
+
+    // Rating Filter
+  if (query.rating) {
+    andConditions.push({
+      technicianProfile: {
+        averageRating: {
+          gte: Number(query.rating),
+        },
+      },
+    });
+  }
 
 
   const result = await prisma.service.findMany({
@@ -96,12 +130,36 @@ const getAllServicesFromDB = async (query: IServicesQuery) => {
         },
       },
     },
-    orderBy: {
-      createdAt: "desc",
-    },
+      where : {
+                AND : andConditions
+            },
+
+            // dynamic pagination and sorting
+
+            take : limit,
+            skip : skip,
+
+              orderBy : {
+                // sortBy : sortOrder
+                [sortBy] : sortOrder
+            },
+
   });
 
-  return result;
+    const total = await prisma.service.count({
+     where : {
+            AND : andConditions
+        },
+  });
+
+  return  {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data: result,
+  };;
 };
 
 export const serviceService = {

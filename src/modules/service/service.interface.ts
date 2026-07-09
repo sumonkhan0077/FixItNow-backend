@@ -8,11 +8,15 @@ export type CreateServicePayload = {
 };
 
 
-export interface IServicesQuery extends ServiceScalarWhereInput {
-
-    searchTerm?: string
-    page?: string
-    limit?: string
-    sortOrder?: string
-    sortBy?: string
-} 
+export interface IServicesQuery {
+  searchTerm?: string;
+  categoryId?: string;
+  serviceArea?: string;
+  rating?: string;
+  minPrice?: string;
+  maxPrice?: string;
+  page?: string;
+  limit?: string;
+  sortBy?: string;
+  sortOrder?: "asc" | "desc";
+}
