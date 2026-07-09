@@ -38,6 +38,30 @@ const createServiceIntoDB = async (
   return result;
 };
 
+
+const getAllServicesFromDB = async () => {
+  const result = await prisma.service.findMany({
+    include: {
+      category: true,
+      technicianProfile: {
+        include: {
+          user: {
+            omit: {
+              password: true,
+            },
+          },
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return result;
+};
+
 export const serviceService = {
   createServiceIntoDB,
+  getAllServicesFromDB,
 };

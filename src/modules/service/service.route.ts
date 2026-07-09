@@ -6,7 +6,9 @@ const router = Router();
 
 router.post("/create",
      auth("TECHNICIAN"),
-     serviceController.createService)
+     serviceController.createService);
+
+router.get("/all", serviceController.getAllServices);
 
 
 
