@@ -162,7 +162,36 @@ const getAllServicesFromDB = async (query: IServicesQuery) => {
   };;
 };
 
+
+const getMyServicesFromDB = async (userId: string) => {
+  // Technician Profile
+  const technicianProfile = await prisma.technicianProfile.findUniqueOrThrow({
+    where: {
+      userId,
+    },
+  });
+
+
+  const result = await prisma.service.findMany({
+    where: {
+      technicianProfileId: technicianProfile.id,
+    },
+    include: {
+      category: true,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return result;
+};
+
+
+
+
 export const serviceService = {
   createServiceIntoDB,
   getAllServicesFromDB,
+  getMyServicesFromDB,
 };
