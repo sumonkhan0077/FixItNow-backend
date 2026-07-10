@@ -5,7 +5,6 @@ model TechnicianProfile {
   experience    Int?
   serviceArea   String?
   averageRating Float    @default(0.0)
-  isAvailable   Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
@@ -13,6 +12,7 @@ model TechnicianProfile {
   user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   services Service[]
   reviews  Review[]
+  availabilities  Availability[]
 
   @@map("technician_profiles")
 }
