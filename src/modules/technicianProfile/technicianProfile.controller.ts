@@ -2,46 +2,48 @@ import { Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { technicianProfileService } from "./technicianProfile.service";
-import  httpStatus  from "http-status";
+import httpStatus from "http-status";
 
-const createTechnicianProfile = catchAsync(async (req:Request, res:Response) => {
-  const userId = req.user!.id;
+const createTechnicianProfile = catchAsync(
+  async (req: Request, res: Response) => {
+    const userId = req.user!.id;
 
-  const result = await technicianProfileService.createTechnicianProfileIntoDB(
-    userId,
-    req.body
-  );
-
-  sendResponse(res, {
-    success: true,
-    statusCode: 201,
-    message: "Technician profile created successfully",
-    data: result,
-  });
-});
-
-
-const updateTechnicianProfile = catchAsync(async (req:Request, res:Response) => {
-  const userId = req.user!.id;
-
-  const result =
-    await technicianProfileService.updateTechnicianProfileIntoDB(
+    const result = await technicianProfileService.createTechnicianProfileIntoDB(
       userId,
-      req.body
+      req.body,
     );
 
-  sendResponse(res, {
-    success: true,
-    statusCode: httpStatus.OK,
-    message: "Technician profile updated successfully",
-    data: result,
-  });
-});
+    sendResponse(res, {
+      success: true,
+      statusCode: 201,
+      message: "Technician profile created successfully",
+      data: result,
+    });
+  },
+);
+
+const updateTechnicianProfile = catchAsync(
+  async (req: Request, res: Response) => {
+    const userId = req.user!.id;
+
+    const result = await technicianProfileService.updateTechnicianProfileIntoDB(
+      userId,
+      req.body,
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Technician profile updated successfully",
+      data: result,
+    });
+  },
+);
 
 const getMyTechnicianProfile = catchAsync(
   async (req: Request, res: Response) => {
     const result = await technicianProfileService.getMyTechnicianProfileFromDB(
-      req.user!.id
+      req.user!.id,
     );
 
     sendResponse(res, {
@@ -50,11 +52,43 @@ const getMyTechnicianProfile = catchAsync(
       message: "Technician profile retrieved successfully",
       data: result,
     });
-  }
+  },
+);
+
+const getAllTechnicianProfiles = catchAsync(
+  async (req: Request, res: Response) => {
+    const result =
+      await technicianProfileService.getAllTechnicianProfilesFromDB(req.query);
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Technician profiles retrieved successfully",
+      meta: result.meta,
+      data: result.data,
+    });
+  },
+);
+
+const getSingleTechnicianProfile = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await technicianProfileService.getSingleTechnicianProfileFromDB(
+        req.params.id as string,
+      );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Technician profile retrieved successfully",
+      data: result,
+    });
+  },
 );
 
 export const technicianProfileController = {
   createTechnicianProfile,
   updateTechnicianProfile,
-  getMyTechnicianProfile
+  getMyTechnicianProfile,
+  getAllTechnicianProfiles,
+  getSingleTechnicianProfile,
 };

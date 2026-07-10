@@ -25,12 +25,12 @@ router.get(
   technicianProfileController.getAllTechnicianProfiles
 );
 
-// // Single Technician Profile
-// router.get(
-//   "/:id",
-//   auth("CUSTOMER", "TECHNICIAN", "ADMIN"),
-//   technicianProfileController.getSingleTechnicianProfile
-// );
+// Single Technician Profile
+router.get(
+  "/:id",
+  auth("CUSTOMER", "TECHNICIAN", "ADMIN"),
+  technicianProfileController.getSingleTechnicianProfile
+);
 
 
 
