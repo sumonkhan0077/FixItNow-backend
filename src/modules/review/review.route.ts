@@ -10,6 +10,11 @@ router.post(
   reviewController.createReview
 );
 
+router.get(
+  "/all",
+  reviewController.getAllReviews
+);
+
 router.delete(
   "/delete/:id",
   auth("ADMIN"),
