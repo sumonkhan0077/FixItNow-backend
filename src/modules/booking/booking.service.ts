@@ -1,13 +1,16 @@
 import { Prisma } from "../../../generated/prisma/browser";
 import { BookingStatus, Role } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
-import { CreateBookingPayload, IBookingQuery, UpdateBookingStatusPayload } from "./booking.interface";
+import {
+  CreateBookingPayload,
+  IBookingQuery,
+  UpdateBookingStatusPayload,
+} from "./booking.interface";
 import httpStatus from "http-status";
-
 
 const createBookingIntoDB = async (
   customerId: string,
-  payload: CreateBookingPayload
+  payload: CreateBookingPayload,
 ) => {
   // Service exists?
   const service = await prisma.service.findUnique({
@@ -46,12 +49,7 @@ const createBookingIntoDB = async (
   return result;
 };
 
-
-const cancelBookingIntoDB = async (
-  customerId: string,
-  bookingId: string
-) => {
-  
+const cancelBookingIntoDB = async (customerId: string, bookingId: string) => {
   const booking = await prisma.booking.findFirst({
     where: {
       id: bookingId,
@@ -60,18 +58,16 @@ const cancelBookingIntoDB = async (
   });
 
   if (!booking) {
-    throw new Error( "Booking not found");
+    throw new Error("Booking not found");
   }
 
   // just user can cancel it
   if (
     booking.status !== BookingStatus.REQUESTED &&
     booking.status !== BookingStatus.ACCEPTED
-  ) 
-  
-  {
+  ) {
     throw new Error(
-      `Booking cannot be cancelled when status is ${booking.status}`
+      `Booking cannot be cancelled when status is ${booking.status}`,
     );
   }
 
@@ -95,14 +91,12 @@ const cancelBookingIntoDB = async (
   return result;
 };
 
-
 const updateBookingStatusIntoDB = async (
   userId: string,
   bookingId: string,
-  payload: UpdateBookingStatusPayload
+  payload: UpdateBookingStatusPayload,
 ) => {
-
-  // Technician Profile 
+  // Technician Profile
   const technician = await prisma.technicianProfile.findUniqueOrThrow({
     where: {
       userId,
@@ -179,7 +173,7 @@ const updateBookingStatusIntoDB = async (
 
 const getMyBookingsFromDB = async (
   customerId: string,
-  query: IBookingQuery
+  query: IBookingQuery,
 ) => {
   const limit = query.limit ? Number(query.limit) : 10;
   const page = query.page ? Number(query.page) : 1;
@@ -269,10 +263,9 @@ const getMyBookingsFromDB = async (
   };
 };
 
-
 const getTechnicianBookingsFromDB = async (
   userId: string,
-  query: IBookingQuery
+  query: IBookingQuery,
 ) => {
   // Login Technician Profile
   const technician = await prisma.technicianProfile.findUniqueOrThrow({
@@ -369,11 +362,10 @@ const getTechnicianBookingsFromDB = async (
   };
 };
 
-
 const getSingleBookingFromDB = async (
   userId: string,
   role: Role,
-  bookingId: string
+  bookingId: string,
 ) => {
   // Admin can show any booked item
   if (role === "ADMIN") {
@@ -450,12 +442,145 @@ const getSingleBookingFromDB = async (
   });
 };
 
+const getAllBookingsFromDB = async (query: IBookingQuery) => {
+  const limit = query.limit ? Number(query.limit) : 10;
+  const page = query.page ? Number(query.page) : 1;
+  const skip = (page - 1) * limit;
+
+  const sortBy = query.sortBy || "createdAt";
+  const sortOrder = query.sortOrder || "desc";
+
+  const andConditions: Prisma.BookingWhereInput[] = [];
+
+  // Search by Service Title
+  if (query.searchTerm) {
+    andConditions.push({
+      service: {
+        title: {
+          contains: query.searchTerm,
+          mode: "insensitive",
+        },
+      },
+    });
+  }
+
+  // Status Filter
+  if (query.status) {
+    andConditions.push({
+      status: query.status as any,
+    });
+  }
+
+  //price filtering
+  if (query.minPrice || query.maxPrice) {
+    andConditions.push({
+      totalAmount: {
+        gte: query.minPrice ? Number(query.minPrice) : undefined,
+        lte: query.maxPrice ? Number(query.maxPrice) : undefined,
+      },
+    });
+  }
+
+  //date filtering
+  if (query.bookingDate) {
+    const start = new Date(query.bookingDate);
+    const end = new Date(query.bookingDate);
+
+    end.setDate(end.getDate() + 1);
+
+    andConditions.push({
+      bookingDate: {
+        gte: start,
+        lt: end,
+      },
+    });
+  }
+
+  // Category Filter
+  if (query.categoryId) {
+    andConditions.push({
+      service: {
+        categoryId: query.categoryId,
+      },
+    });
+  }
+
+  // Customer Filter
+  if (query.customerId) {
+    andConditions.push({
+      customerId: query.customerId,
+    });
+  }
+
+  // Technician Filter
+  if (query.technicianId) {
+    andConditions.push({
+      service: {
+        technicianProfileId: query.technicianId,
+      },
+    });
+  }
+
+  const whereConditions: Prisma.BookingWhereInput =
+    andConditions.length > 0 ? { AND: andConditions } : {};
+
+  const data = await prisma.booking.findMany({
+    where: whereConditions,
+    include: {
+      customer: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profileImage: true,
+        },
+      },
+      service: {
+        include: {
+          category: true,
+          technicianProfile: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      payment: true,
+      review: true,
+    },
+    skip,
+    take: limit,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+  });
+
+  const total = await prisma.booking.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data,
+  };
+};
+
 export const bookingService = {
   createBookingIntoDB,
   cancelBookingIntoDB,
   updateBookingStatusIntoDB,
   getMyBookingsFromDB,
   getTechnicianBookingsFromDB,
-  getSingleBookingFromDB ,
-  
+  getSingleBookingFromDB,
+  getAllBookingsFromDB,
 };

@@ -11,11 +11,18 @@ export interface UpdateBookingStatusPayload {
   status: BookingStatus;
 }
 
+
 export interface IBookingQuery {
-  categoryId?:string;
   searchTerm?: string;
 
   status?: string;
+  categoryId?: string;
+  customerId?: string;
+  technicianId?: string;
+
+  minPrice?: string;
+  maxPrice?: string;
+
   bookingDate?: string;
 
   page?: string;
