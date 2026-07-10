@@ -31,7 +31,24 @@ const getMyAvailability = catchAsync(async (req, res) => {
   });
 });
 
+const updateAvailability = catchAsync(async (req, res) => {
+  const result = await availabilityService.updateAvailabilityIntoDB(
+    req.user!.id,
+    req.user!.role,
+    req.params.id,
+    req.body
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Availability updated successfully",
+    data: result,
+  });
+});
+
 export const availabilityController = {
   createAvailability,
-  getMyAvailability
+  getMyAvailability,
+  updateAvailability,
 };

@@ -1,6 +1,6 @@
 export interface CreateAvailabilityPayload {
-  dayOfWeek:|
-     "SATURDAY"
+  dayOfWeek:
+    | "SATURDAY"
     | "SUNDAY"
     | "MONDAY"
     | "TUESDAY"
@@ -9,4 +9,19 @@ export interface CreateAvailabilityPayload {
     | "FRIDAY";
   startTime: string;
   endTime: string;
+}
+
+
+export interface UpdateAvailabilityPayload {
+  dayOfWeek?: 
+    | "SATURDAY"
+    | "SUNDAY"
+    | "MONDAY"
+    | "TUESDAY"
+    | "WEDNESDAY"
+    | "THURSDAY"
+    | "FRIDAY";
+  startTime?: string;
+  endTime?: string;
+  isAvailable?: boolean;
 }

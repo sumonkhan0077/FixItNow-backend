@@ -1,5 +1,6 @@
+import { Role } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
-import { CreateAvailabilityPayload } from "./technicianAvailability.interface";
+import { CreateAvailabilityPayload, UpdateAvailabilityPayload } from "./technicianAvailability.interface";
 
 const createAvailabilityIntoDB = async (
   userId: string,
@@ -64,7 +65,53 @@ const getMyAvailabilityFromDB = async (userId: string) => {
   return result;
 };
 
+const updateAvailabilityIntoDB = async (
+  userId: string,
+  role: Role,
+  availabilityId: string,
+  payload: UpdateAvailabilityPayload
+) => {
+  
+  if (role === Role.ADMIN) {
+    return await prisma.availability.update({
+      where: {
+        id: availabilityId,
+      },
+      data: payload,
+    });
+  }
+
+  
+  const technician = await prisma.technicianProfile.findUniqueOrThrow({
+    where: {
+      userId,
+    },
+  });
+
+  const slot = await prisma.availability.findFirst({
+    where: {
+      id: availabilityId,
+      technicianProfileId: technician.id,
+    },
+  });
+
+  if (!slot) {
+    throw new Error(
+      "Availability slot not found"
+    );
+  }
+
+  // Update
+  return await prisma.availability.update({
+    where: {
+      id: availabilityId,
+    },
+    data: payload,
+  });
+};
+
 export const availabilityService = {
   createAvailabilityIntoDB,
   getMyAvailabilityFromDB,
+  updateAvailabilityIntoDB
 };

@@ -18,16 +18,16 @@ router.get(
 );
 
 router.patch(
-  "update-slot/:id",
+  "/update-slot/:id",
   auth(Role.TECHNICIAN, Role.ADMIN),
   availabilityController.updateAvailability
 );
 
-// router.delete(
-//   "/:id",
-//   auth(Role.TECHNICIAN, Role.ADMIN),
-//   availabilityController.deleteAvailability
-// );
+router.delete(
+  "/:id",
+  auth(Role.TECHNICIAN, Role.ADMIN),
+  availabilityController.deleteAvailability
+);
 
 
 export const availabilityRoutes = router;
