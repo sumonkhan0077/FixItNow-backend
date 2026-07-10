@@ -1,19 +1,22 @@
 import { Prisma } from "../../../generated/prisma/client";
 import { ServiceScalarWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
-import { CreateServicePayload, IServicesQuery, UpdateServicePayload } from "./service.interface";
+import {
+  CreateServicePayload,
+  IServicesQuery,
+  UpdateServicePayload,
+} from "./service.interface";
 
 const createServiceIntoDB = async (
   userId: string,
-  payload: CreateServicePayload
+  payload: CreateServicePayload,
 ) => {
   // Technician Profile
-  const technicianProfile =
-    await prisma.technicianProfile.findUniqueOrThrow({
-      where: {
-        userId,
-      },
-    });
+  const technicianProfile = await prisma.technicianProfile.findUniqueOrThrow({
+    where: {
+      userId,
+    },
+  });
 
   // Category?
   await prisma.category.findUniqueOrThrow({
@@ -40,60 +43,54 @@ const createServiceIntoDB = async (
   return result;
 };
 
-
 const getAllServicesFromDB = async (query: IServicesQuery) => {
-
-    const limit = query.limit ? Number(query.limit) : 10;
+  const limit = query.limit ? Number(query.limit) : 10;
   const page = query.page ? Number(query.page) : 1;
   const skip = (page - 1) * limit;
 
   const sortBy = query.sortBy || "createdAt";
   const sortOrder = query.sortOrder || "desc";
 
-//   const andConditions : ServiceScalarWhereInput[] = []
-  const andConditions: Prisma.ServiceWhereInput[]= []; 
+  //   const andConditions : ServiceScalarWhereInput[] = []
+  const andConditions: Prisma.ServiceWhereInput[] = [];
 
-
- //search kora
-  if(query.searchTerm){
+  //search kora
+  if (query.searchTerm) {
     andConditions.push({
-        OR: [
-            {
-                title: {
-                    contains: query.searchTerm,
-                    mode: "insensitive",
-                },
-            },
-            {
-                description: {
-                    contains: query.searchTerm,
-                    mode: "insensitive",
-                },
-
-            },
-        ],
+      OR: [
+        {
+          title: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+        {
+          description: {
+            contains: query.searchTerm,
+            mode: "insensitive",
+          },
+        },
+      ],
     });
   }
 
-
-    if (query.categoryId) {
+  if (query.categoryId) {
     andConditions.push({
       categoryId: query.categoryId,
     });
   }
 
-
-   // Price Filter
-  if(query.minPrice || query.maxPrice){
-     andConditions.push({
-        price: {
-             gte: query.minPrice ? Number(query.minPrice) : undefined,
-             lte: query.maxPrice ? Number(query.maxPrice) : undefined,
-        }
-     })
+  // Price Filter
+  if (query.minPrice || query.maxPrice) {
+    andConditions.push({
+      price: {
+        gte: query.minPrice ? Number(query.minPrice) : undefined,
+        lte: query.maxPrice ? Number(query.maxPrice) : undefined,
+      },
+    });
   }
 
-   // Service Area Filter
+  // Service Area Filter
   if (query.serviceArea) {
     andConditions.push({
       technicianProfile: {
@@ -101,11 +98,11 @@ const getAllServicesFromDB = async (query: IServicesQuery) => {
           contains: query.serviceArea,
           mode: "insensitive",
         },
-      }, 
+      },
     });
   }
 
-    // Rating Filter
+  // Rating Filter
   if (query.rating) {
     andConditions.push({
       technicianProfile: {
@@ -115,7 +112,6 @@ const getAllServicesFromDB = async (query: IServicesQuery) => {
       },
     });
   }
-
 
   const result = await prisma.service.findMany({
     include: {
@@ -130,38 +126,36 @@ const getAllServicesFromDB = async (query: IServicesQuery) => {
         },
       },
     },
-      where : {
-                AND : andConditions
-            },
+    where: {
+      AND: andConditions,
+    },
 
-            // dynamic pagination and sorting
+    // dynamic pagination and sorting
 
-            take : limit,
-            skip : skip,
+    take: limit,
+    skip: skip,
 
-              orderBy : {
-                // sortBy : sortOrder
-                [sortBy] : sortOrder
-            },
-
+    orderBy: {
+      // sortBy : sortOrder
+      [sortBy]: sortOrder,
+    },
   });
 
-    const total = await prisma.service.count({
-     where : {
-            AND : andConditions
-        },
+  const total = await prisma.service.count({
+    where: {
+      AND: andConditions,
+    },
   });
 
-  return  {
+  return {
     meta: {
       page,
       limit,
       total,
     },
     data: result,
-  };;
+  };
 };
-
 
 const getMyServicesFromDB = async (userId: string) => {
   // Technician Profile
@@ -170,7 +164,6 @@ const getMyServicesFromDB = async (userId: string) => {
       userId,
     },
   });
-
 
   const result = await prisma.service.findMany({
     where: {
@@ -187,21 +180,18 @@ const getMyServicesFromDB = async (userId: string) => {
   return result;
 };
 
-
 const updateServiceIntoDB = async (
   userId: string,
   serviceId: string,
-  payload: UpdateServicePayload
+  payload: UpdateServicePayload,
 ) => {
-  // Technician Profile 
-  const technicianProfile =
-    await prisma.technicianProfile.findUniqueOrThrow({
-      where: {
-        userId,
-      },
-    });
+  // Technician Profile
+  const technicianProfile = await prisma.technicianProfile.findUniqueOrThrow({
+    where: {
+      userId,
+    },
+  });
 
-  
   const service = await prisma.service.findFirstOrThrow({
     where: {
       id: serviceId,
@@ -209,16 +199,16 @@ const updateServiceIntoDB = async (
     },
   });
 
-  // check Category have, 
- const category = await prisma.category.findUnique({
-  where: {
-    id: payload.categoryId,
-  },
-});
+  // check Category have,
+  const category = await prisma.category.findUnique({
+    where: {
+      id: payload.categoryId,
+    },
+  });
 
-if (!category) {
-  throw new Error("Category not found");
-}
+  if (!category) {
+    throw new Error("Category not found");
+  }
 
   // Update
   const result = await prisma.service.update({
@@ -232,8 +222,8 @@ if (!category) {
   });
 
   return result;
-};   
- 
+};
+
 const getSingleServiceFromDB = async (serviceId: string) => {
   const service = await prisma.service.findUniqueOrThrow({
     where: {
@@ -246,7 +236,22 @@ const getSingleServiceFromDB = async (serviceId: string) => {
           user: {
             omit: {
               password: true,
-            },  
+            },
+          },
+          availabilities: {
+            select: {
+              dayOfWeek: true,
+              startTime: true,
+              endTime: true,
+            },
+            orderBy: [
+              {
+                dayOfWeek: "asc",
+              },
+              {
+                startTime: "asc",
+              },
+            ],
           },
           reviews: {
             include: {
@@ -268,12 +273,10 @@ const getSingleServiceFromDB = async (serviceId: string) => {
   return service;
 };
 
-
-
 export const serviceService = {
   createServiceIntoDB,
   getAllServicesFromDB,
   getMyServicesFromDB,
   updateServiceIntoDB,
-  getSingleServiceFromDB
+  getSingleServiceFromDB,
 };
