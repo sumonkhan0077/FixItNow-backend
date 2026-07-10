@@ -34,10 +34,10 @@ router.get(
   bookingController.getTechnicianBookings
 );
 
-// router.get(
-//   "/:id",
-//   auth("CUSTOMER", "TECHNICIAN", "ADMIN"),
-//   bookingController.getSingleBooking
-// );
+router.get(
+  "/:id",
+  auth("CUSTOMER", "TECHNICIAN", "ADMIN"),
+  bookingController.getSingleBooking
+);
 
 export const bookingRoutes = router;

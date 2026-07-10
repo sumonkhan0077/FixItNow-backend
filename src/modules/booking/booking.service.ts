@@ -1,5 +1,5 @@
 import { Prisma } from "../../../generated/prisma/browser";
-import { BookingStatus } from "../../../generated/prisma/enums";
+import { BookingStatus, Role } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import { CreateBookingPayload, IBookingQuery, UpdateBookingStatusPayload } from "./booking.interface";
 import httpStatus from "http-status";
@@ -369,10 +369,93 @@ const getTechnicianBookingsFromDB = async (
   };
 };
 
+
+const getSingleBookingFromDB = async (
+  userId: string,
+  role: Role,
+  bookingId: string
+) => {
+  // Admin can show any booked item
+  if (role === "ADMIN") {
+    return await prisma.booking.findUniqueOrThrow({
+      where: {
+        id: bookingId,
+      },
+      include: {
+        customer: true,
+        service: {
+          include: {
+            category: true,
+            technicianProfile: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        },
+        payment: true,
+        review: true,
+      },
+    });
+  }
+
+  // Customer show his owe booked item
+  if (role === "CUSTOMER") {
+    return await prisma.booking.findFirstOrThrow({
+      where: {
+        id: bookingId,
+        customerId: userId,
+      },
+      include: {
+        service: {
+          include: {
+            category: true,
+            technicianProfile: {
+              include: {
+                user: true,
+              },
+            },
+          },
+        },
+        payment: true,
+        review: true,
+      },
+    });
+  }
+
+  // Technician can shaw his  Service Booking
+  const technician = await prisma.technicianProfile.findUniqueOrThrow({
+    where: {
+      userId,
+    },
+  });
+
+  return await prisma.booking.findFirstOrThrow({
+    where: {
+      id: bookingId,
+      service: {
+        technicianProfileId: technician.id,
+      },
+    },
+    include: {
+      customer: true,
+      service: {
+        include: {
+          category: true,
+        },
+      },
+      payment: true,
+      review: true,
+    },
+  });
+};
+
 export const bookingService = {
   createBookingIntoDB,
   cancelBookingIntoDB,
   updateBookingStatusIntoDB,
   getMyBookingsFromDB,
   getTechnicianBookingsFromDB,
+  getSingleBookingFromDB ,
+  
 };
