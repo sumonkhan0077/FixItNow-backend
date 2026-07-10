@@ -78,7 +78,28 @@ const getMyTechnicianProfileFromDB = async (userId: string) => {
           createdAt: "desc",
         },
       },
-      reviews: true,
+       availabilities: {
+        select: {
+          id: true,
+          dayOfWeek: true,
+          startTime: true,
+          endTime: true,
+          isAvailable: true,
+        },
+        orderBy: [
+          {
+            dayOfWeek: "asc",
+          },
+          {
+            startTime: "asc",
+          },
+        ],
+      },
+      reviews: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
     },
   });
 
