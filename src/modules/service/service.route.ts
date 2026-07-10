@@ -18,6 +18,12 @@ router.get(
   serviceController.getMyServices,
 );
 
+router.delete(
+  "/delete/:id",
+  auth("TECHNICIAN", "ADMIN"),
+  serviceController.deleteService
+);
+
 router.patch(
   "/:id",
   auth("TECHNICIAN", "ADMIN"),

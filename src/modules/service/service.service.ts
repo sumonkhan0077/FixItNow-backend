@@ -1,4 +1,4 @@
-import { Prisma } from "../../../generated/prisma/client";
+import { Prisma, Role } from "../../../generated/prisma/client";
 import { ServiceScalarWhereInput } from "../../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
 import {
@@ -273,10 +273,53 @@ const getSingleServiceFromDB = async (serviceId: string) => {
   return service;
 };
 
+const deleteServiceFromDB = async (
+  userId: string,
+  role: Role,
+  serviceId: string
+) => {
+  // Admin can any Service Delete 
+  if (role === Role.ADMIN) {
+    return await prisma.service.delete({
+      where: {
+        id: serviceId,
+      },
+    });
+  }
+
+  // Login Technician
+  const technician = await prisma.technicianProfile.findUniqueOrThrow({
+    where: {
+      userId,
+    },
+  });
+
+  // Service Check
+  const service = await prisma.service.findFirst({
+    where: {
+      id: serviceId,
+      technicianProfileId: technician.id,
+    },
+  });
+
+  if (!service) {
+    throw new Error(
+      "Service not found"
+    );
+  }
+
+  return await prisma.service.delete({
+    where: {
+      id: serviceId,
+    },
+  });
+};
+
 export const serviceService = {
   createServiceIntoDB,
   getAllServicesFromDB,
   getMyServicesFromDB,
   updateServiceIntoDB,
   getSingleServiceFromDB,
+  deleteServiceFromDB,
 };
