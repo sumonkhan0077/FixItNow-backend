@@ -202,6 +202,23 @@ const getAllTechnicianProfilesFromDB = async (
           category: true,
         },
       },
+      availabilities: {
+        select: {
+          id: true,
+          dayOfWeek: true,
+          startTime: true,
+          endTime: true,
+          isAvailable: true,
+        },
+        orderBy: [
+          {
+            dayOfWeek: "asc",
+          },
+          {
+            startTime: "asc",
+          },
+        ],
+      },
       _count: {
         select: {
           services: true,
@@ -253,6 +270,23 @@ const getSingleTechnicianProfileFromDB = async (id: string) => {
         orderBy: {
           createdAt: "desc",
         },
+      },
+      availabilities: {
+        select: {
+          id: true,
+          dayOfWeek: true,
+          startTime: true,
+          endTime: true,
+          isAvailable: true,
+        },
+        orderBy: [
+          {
+            dayOfWeek: "asc",
+          },
+          {
+            startTime: "asc",
+          },
+        ],
       },
       reviews: {
         include: {
