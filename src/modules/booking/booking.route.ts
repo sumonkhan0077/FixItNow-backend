@@ -20,6 +20,24 @@ router.patch(
   "/update-status/:id",
   auth('TECHNICIAN', "ADMIN"),
   bookingController.updateBookingStatus
+); 
+
+router.get(
+  "/my-bookings",
+  auth("CUSTOMER", "ADMIN"),
+  bookingController.getMyBookings
 );
+
+// router.get(
+//   "/technician-bookings",
+//   auth("TECHNICIAN"),
+//   bookingController.getTechnicianBookings
+// );
+
+// router.get(
+//   "/:id",
+//   auth("CUSTOMER", "TECHNICIAN", "ADMIN"),
+//   bookingController.getSingleBooking
+// );
 
 export const bookingRoutes = router;

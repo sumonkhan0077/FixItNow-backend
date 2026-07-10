@@ -1,6 +1,7 @@
+import { Prisma } from "../../../generated/prisma/browser";
 import { BookingStatus } from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
-import { CreateBookingPayload, UpdateBookingStatusPayload } from "./booking.interface";
+import { CreateBookingPayload, IBookingQuery, UpdateBookingStatusPayload } from "./booking.interface";
 import httpStatus from "http-status";
 
 
@@ -176,9 +177,102 @@ const updateBookingStatusIntoDB = async (
   return result;
 };
 
+const getMyBookingsFromDB = async (
+  customerId: string,
+  query: IBookingQuery
+) => {
+  const limit = query.limit ? Number(query.limit) : 10;
+  const page = query.page ? Number(query.page) : 1;
+  const skip = (page - 1) * limit;
+
+  const sortBy = query.sortBy || "createdAt";
+  const sortOrder = query.sortOrder || "desc";
+
+  const andConditions: Prisma.BookingWhereInput[] = [];
+
+  // Login customer
+  andConditions.push({
+    customerId,
+  });
+
+  // Search (Service Title)
+  if (query.searchTerm) {
+    andConditions.push({
+      service: {
+        title: {
+          contains: query.searchTerm,
+          mode: "insensitive",
+        },
+      },
+    });
+  }
+
+  // Status Filter
+  if (query.status) {
+    andConditions.push({
+      status: query.status as any,
+    });
+  }
+
+  // Booking Date Filter
+  if (query.bookingDate) {
+    andConditions.push({
+      bookingDate: new Date(query.bookingDate),
+    });
+  }
+
+  const whereConditions: Prisma.BookingWhereInput = {
+    AND: andConditions,
+  };
+
+  const data = await prisma.booking.findMany({
+    where: whereConditions,
+    include: {
+      service: {
+        include: {
+          category: true,
+          technicianProfile: {
+            include: {
+              user: {
+                select: {
+                  id: true,
+                  name: true,
+                  email: true,
+                  profileImage: true,
+                },
+              },
+            },
+          },
+        },
+      },
+      payment: true,
+      review: true,
+    },
+    skip,
+    take: limit,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+  });
+
+  const total = await prisma.booking.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data,
+  };
+};
+
 
 export const bookingService = {
   createBookingIntoDB,
   cancelBookingIntoDB,
   updateBookingStatusIntoDB,
+  getMyBookingsFromDB,
 };

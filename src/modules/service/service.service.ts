@@ -232,8 +232,8 @@ if (!category) {
   });
 
   return result;
-};
-
+};   
+ 
 const getSingleServiceFromDB = async (serviceId: string) => {
   const service = await prisma.service.findUniqueOrThrow({
     where: {
@@ -246,7 +246,7 @@ const getSingleServiceFromDB = async (serviceId: string) => {
           user: {
             omit: {
               password: true,
-            },
+            },  
           },
           reviews: {
             include: {

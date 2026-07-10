@@ -10,3 +10,16 @@ export interface CreateBookingPayload {
 export interface UpdateBookingStatusPayload {
   status: BookingStatus;
 }
+
+export interface IBookingQuery {
+  searchTerm?: string;
+
+  status?: string;
+  bookingDate?: string;
+
+  page?: string;
+  limit?: string;
+
+  sortBy?: string;
+  sortOrder?: string;
+}
