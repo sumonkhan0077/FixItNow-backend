@@ -38,6 +38,33 @@ const createAvailabilityIntoDB = async (
   return result;
 };
 
+const getMyAvailabilityFromDB = async (userId: string) => {
+  
+  const technician = await prisma.technicianProfile.findUniqueOrThrow({
+    where: {
+      userId,
+    },
+  });
+
+  
+  const result = await prisma.availability.findMany({
+    where: {
+      technicianProfileId: technician.id,
+    },
+    orderBy: [
+      {
+        dayOfWeek: "asc",
+      },
+      {
+        startTime: "asc",
+      },
+    ],
+  });
+
+  return result;
+};
+
 export const availabilityService = {
   createAvailabilityIntoDB,
+  getMyAvailabilityFromDB,
 };

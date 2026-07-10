@@ -18,6 +18,20 @@ const createAvailability = catchAsync(async (req: Request, res:Response) => {
   });
 });
 
+const getMyAvailability = catchAsync(async (req, res) => {
+  const result = await availabilityService.getMyAvailabilityFromDB(
+    req.user!.id
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Availability slots retrieved successfully",
+    data: result,
+  });
+});
+
 export const availabilityController = {
   createAvailability,
+  getMyAvailability
 };

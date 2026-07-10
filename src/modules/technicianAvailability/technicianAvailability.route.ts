@@ -11,5 +11,23 @@ router.post(
   availabilityController.createAvailability
 );
 
+router.get(
+  "/my-slots",
+  auth(Role.TECHNICIAN, Role.ADMIN),
+  availabilityController.getMyAvailability
+);
+
+router.patch(
+  "update-slot/:id",
+  auth(Role.TECHNICIAN, Role.ADMIN),
+  availabilityController.updateAvailability
+);
+
+// router.delete(
+//   "/:id",
+//   auth(Role.TECHNICIAN, Role.ADMIN),
+//   availabilityController.deleteAvailability
+// );
+
 
 export const availabilityRoutes = router;
