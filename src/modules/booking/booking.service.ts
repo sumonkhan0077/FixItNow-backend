@@ -270,9 +270,109 @@ const getMyBookingsFromDB = async (
 };
 
 
+const getTechnicianBookingsFromDB = async (
+  userId: string,
+  query: IBookingQuery
+) => {
+  // Login Technician Profile
+  const technician = await prisma.technicianProfile.findUniqueOrThrow({
+    where: {
+      userId,
+    },
+  });
+
+  const limit = query.limit ? Number(query.limit) : 10;
+  const page = query.page ? Number(query.page) : 1;
+  const skip = (page - 1) * limit;
+
+  const sortBy = query.sortBy || "createdAt";
+  const sortOrder = query.sortOrder || "desc";
+
+  const andConditions: Prisma.BookingWhereInput[] = [];
+
+  // Only this technician's bookings
+  andConditions.push({
+    service: {
+      technicianProfileId: technician.id,
+    },
+  });
+
+  // Search by Service Title
+  if (query.searchTerm) {
+    andConditions.push({
+      service: {
+        title: {
+          contains: query.searchTerm,
+          mode: "insensitive",
+        },
+      },
+    });
+  }
+
+  // Filter by Status
+  if (query.status) {
+    andConditions.push({
+      status: query.status as any,
+    });
+  }
+
+  // Filter by Category
+  if (query.categoryId) {
+    andConditions.push({
+      service: {
+        categoryId: query.categoryId,
+      },
+    });
+  }
+
+  const whereConditions: Prisma.BookingWhereInput = {
+    AND: andConditions,
+  };
+
+  const data = await prisma.booking.findMany({
+    where: whereConditions,
+    include: {
+      customer: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profileImage: true,
+        },
+      },
+      service: {
+        include: {
+          category: true,
+        },
+      },
+      payment: true,
+      review: true,
+    },
+    skip,
+    take: limit,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+  });
+
+  const total = await prisma.booking.count({
+    where: whereConditions,
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data,
+  };
+};
+
 export const bookingService = {
   createBookingIntoDB,
   cancelBookingIntoDB,
   updateBookingStatusIntoDB,
   getMyBookingsFromDB,
+  getTechnicianBookingsFromDB,
 };

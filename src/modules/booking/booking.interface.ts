@@ -12,6 +12,7 @@ export interface UpdateBookingStatusPayload {
 }
 
 export interface IBookingQuery {
+  categoryId?:string;
   searchTerm?: string;
 
   status?: string;

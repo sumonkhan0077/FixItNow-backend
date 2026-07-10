@@ -28,11 +28,11 @@ router.get(
   bookingController.getMyBookings
 );
 
-// router.get(
-//   "/technician-bookings",
-//   auth("TECHNICIAN"),
-//   bookingController.getTechnicianBookings
-// );
+router.get(
+  "/technician-bookings",
+  auth("TECHNICIAN", "ADMIN"),
+  bookingController.getTechnicianBookings
+);
 
 // router.get(
 //   "/:id",
