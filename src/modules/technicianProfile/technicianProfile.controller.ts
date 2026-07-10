@@ -1,9 +1,10 @@
+import { Request, Response } from "express";
 import { catchAsync } from "../../utils/catchAsync";
 import { sendResponse } from "../../utils/sendResponse";
 import { technicianProfileService } from "./technicianProfile.service";
 import  httpStatus  from "http-status";
 
-const createTechnicianProfile = catchAsync(async (req, res) => {
+const createTechnicianProfile = catchAsync(async (req:Request, res:Response) => {
   const userId = req.user!.id;
 
   const result = await technicianProfileService.createTechnicianProfileIntoDB(
@@ -20,7 +21,7 @@ const createTechnicianProfile = catchAsync(async (req, res) => {
 });
 
 
-const updateTechnicianProfile = catchAsync(async (req, res) => {
+const updateTechnicianProfile = catchAsync(async (req:Request, res:Response) => {
   const userId = req.user!.id;
 
   const result =
@@ -37,7 +38,23 @@ const updateTechnicianProfile = catchAsync(async (req, res) => {
   });
 });
 
+const getMyTechnicianProfile = catchAsync(
+  async (req: Request, res: Response) => {
+    const result = await technicianProfileService.getMyTechnicianProfileFromDB(
+      req.user!.id
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: "Technician profile retrieved successfully",
+      data: result,
+    });
+  }
+);
+
 export const technicianProfileController = {
   createTechnicianProfile,
-  updateTechnicianProfile
+  updateTechnicianProfile,
+  getMyTechnicianProfile
 };

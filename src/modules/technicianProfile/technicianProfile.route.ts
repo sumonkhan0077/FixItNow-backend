@@ -13,6 +13,25 @@ router.post("/create",  auth("TECHNICIAN", "ADMIN"),
   technicianProfileController.updateTechnicianProfile
 );
 
+router.get(
+  "/my-profile",
+  auth("TECHNICIAN", "ADMIN"),
+  technicianProfileController.getMyTechnicianProfile
+);
+
+router.get(
+  "/all",
+  auth("ADMIN"),
+  technicianProfileController.getAllTechnicianProfiles
+);
+
+// // Single Technician Profile
+// router.get(
+//   "/:id",
+//   auth("CUSTOMER", "TECHNICIAN", "ADMIN"),
+//   technicianProfileController.getSingleTechnicianProfile
+// );
+
 
 
 export const technicianProfileRoutes = router;
