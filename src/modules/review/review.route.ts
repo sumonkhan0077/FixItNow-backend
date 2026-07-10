@@ -12,6 +12,7 @@ router.post(
 
 router.get(
   "/all",
+  auth("ADMIN"),
   reviewController.getAllReviews
 );
 
