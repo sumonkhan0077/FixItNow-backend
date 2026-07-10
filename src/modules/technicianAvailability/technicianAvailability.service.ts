@@ -110,8 +110,52 @@ const updateAvailabilityIntoDB = async (
   });
 };
 
+const deleteAvailabilityFromDB = async (
+  userId: string,
+  role: Role,
+  availabilityId: string
+) => {
+  // Admin can any Slot Delete 
+  if (role === Role.ADMIN) {
+    return await prisma.availability.delete({
+      where: {
+        id: availabilityId,
+      },
+    });
+  }
+
+  // Login Technician Profile
+  const technician = await prisma.technicianProfile.findUniqueOrThrow({
+    where: {
+      userId,
+    },
+  });
+
+  // Slot Check
+  const slot = await prisma.availability.findFirst({
+    where: {
+      id: availabilityId,
+      technicianProfileId: technician.id,
+    },
+  });
+
+  if (!slot) {
+    throw new Error(
+      "Availability slot not found"
+    );
+  }
+
+  // Delete
+  return await prisma.availability.delete({
+    where: {
+      id: availabilityId,
+    },
+  });
+};
+
 export const availabilityService = {
   createAvailabilityIntoDB,
   getMyAvailabilityFromDB,
-  updateAvailabilityIntoDB
+  updateAvailabilityIntoDB,
+  deleteAvailabilityFromDB
 };

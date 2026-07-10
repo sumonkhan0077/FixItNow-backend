@@ -18,7 +18,7 @@ const createAvailability = catchAsync(async (req: Request, res:Response) => {
   });
 });
 
-const getMyAvailability = catchAsync(async (req, res) => {
+const getMyAvailability = catchAsync(async (req: Request, res:Response) => {
   const result = await availabilityService.getMyAvailabilityFromDB(
     req.user!.id
   );
@@ -31,11 +31,11 @@ const getMyAvailability = catchAsync(async (req, res) => {
   });
 });
 
-const updateAvailability = catchAsync(async (req, res) => {
+const updateAvailability = catchAsync(async (req: Request, res:Response) => {
   const result = await availabilityService.updateAvailabilityIntoDB(
     req.user!.id,
     req.user!.role,
-    req.params.id,
+    req.params.id as string,
     req.body
   );
 
@@ -47,8 +47,25 @@ const updateAvailability = catchAsync(async (req, res) => {
   });
 });
 
+
+const deleteAvailability = catchAsync(async (req: Request, res:Response) => {
+  const result = await availabilityService.deleteAvailabilityFromDB(
+    req.user!.id,
+    req.user!.role,
+    req.params.id as string
+  );
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Availability deleted successfully",
+    data: result,
+  });
+});
+
 export const availabilityController = {
   createAvailability,
   getMyAvailability,
   updateAvailability,
+  deleteAvailability,
 };
