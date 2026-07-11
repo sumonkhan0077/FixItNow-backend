@@ -12,7 +12,10 @@ router.post(
   paymentController.createCheckoutSession
 );
 
-// router.get("/", auth(Role.CUSTOMER,  Role.ADMIN), paymentController.getPaymentHistory);
+
+
+router.get("/", auth(Role.CUSTOMER,  Role.ADMIN), paymentController.getPaymentHistory);
+
 // router.get("/:id", auth(Role.CUSTOMER, Role.ADMIN), paymentController.getPaymentDetails);
 
 export const paymentRouts = router;

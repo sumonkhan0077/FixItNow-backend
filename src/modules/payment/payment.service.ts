@@ -73,7 +73,117 @@ const createCheckoutSession = async (
   });
 };
 
+
+const handleWebhook = async (
+  rawBody: Buffer | string,
+  signature: string,
+) => {
+  let event: Stripe.Event;
+
+  try {
+    const buffer =
+      typeof rawBody === "string" ? Buffer.from(rawBody) : rawBody;
+
+    event = stripe.webhooks.constructEvent(
+      buffer,
+      signature,
+      config.stripe_webhook_secret as string,
+    );
+
+    console.log("Webhook signature verified");
+  } catch (err: any) {
+    throw new Error(`Webhook signature verification failed: ${err.message}`);
+  }
+
+  switch (event.type) {
+    case "checkout.session.completed": {
+      const session = event.data.object as Stripe.Checkout.Session;
+
+      const bookingId = session.metadata?.bookingId;
+      const customerId = session.metadata?.customerId;
+
+      if (!bookingId || !customerId) {
+        console.warn("BookingId or CustomerId missing in metadata");
+        break;
+      }
+
+      await prisma.$transaction(async (tx) => {
+        // Booking Exists?
+        const booking = await tx.booking.findUnique({
+          where: {
+            id: bookingId,
+          },
+          include: {
+            payment: true,
+          },
+        });
+
+        if (!booking) {
+          console.log("Booking not found");
+          return;
+        }
+
+        // Prevent duplicate payment
+        if (booking.payment) {
+          console.log("Payment already completed");
+          return;
+        }
+
+        // Create Payment
+        const payment = await tx.payment.create({
+          data: {
+            bookingId,
+            customerId,
+            provider: PaymentProvider.STRIPE,
+            transactionId:
+              (session.payment_intent as string) || session.id,
+            amount: booking.totalAmount,
+            status: PaymentStatus.COMPLETED,
+            paidAt: new Date(),
+          },
+        });
+
+        console.log("Payment Created");
+        console.log("Transaction:", payment.transactionId);
+
+        // Update Booking Status
+        await tx.booking.update({
+          where: {
+            id: bookingId,
+          },
+          data: {
+            status: BookingStatus.PAID, 
+          },
+        });
+
+        console.log(" Booking Updated");
+      });
+
+      break;
+    }
+
+    case "checkout.session.expired":
+    case "payment_intent.payment_failed": {
+      const session = event.data.object as Stripe.Checkout.Session;
+
+      console.log(" Payment Failed");
+      console.log("Booking:", session.metadata?.bookingId);
+
+      break;
+    }
+
+    default:
+      console.log(`Unhandled Event: ${event.type}`);
+      break;
+  }
+
+  return {
+    received: true,
+  };
+};
+
 export const paymentServices = {
   createCheckoutSession,
+  handleWebhook
 
 };

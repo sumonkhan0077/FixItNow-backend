@@ -24,11 +24,11 @@ app.use(cors({
 }))
 
 
-// app.post(
-//   "/api/payments/confirm",
-//   express.raw({ type: "application/json" }),
-//   paymentController.handleWebhook,
-// );
+    app.post(
+    "/api/payments/confirm",
+    express.raw({ type: "application/json" }),
+    paymentController.handleWebhook,
+    );
 
 
 app.use(express.json());

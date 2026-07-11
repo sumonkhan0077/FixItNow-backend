@@ -19,25 +19,25 @@ const createCheckoutSession = catchAsync(async (req, res) => {
 });
 
 
-// const handleWebhook = catchAsync(async (req: Request, res: Response) => {
-//   const signature = req.headers["stripe-signature"] as string;
-//   const rawBody = req.body;
+const handleWebhook = catchAsync(async (req: Request, res: Response) => {
+  const signature = req.headers["stripe-signature"] as string;
+  const rawBody = req.body;
 
-//   if (!signature) {
-//     console.error("No Stripe signature found in headers");
-//     return res.status(400).json({ error: "No signature provided" });
-//   }
+  if (!signature) {
+    console.error("No Stripe signature found in headers");
+    return res.status(400).json({ error: "No signature provided" });
+  }
 
-//   try {
-//     await paymentServices.handleWebhook(rawBody, signature);
+  try {
+    await paymentServices.handleWebhook(rawBody, signature) ;
 
-//     // Stripe expects plain 200 response
-//     return res.status(200).json({ received: true });
-//   } catch (error: any) {
-//     console.error("Webhook handler error:", error.message);
-//     return res.status(400).json({ error: error.message });
-//   }
-// });
+    // Stripe expects plain 200 response
+    return res.status(200).json({ received: true });
+  } catch (error: any) {
+    console.error("Webhook handler error:", error.message);
+    return res.status(400).json({ error: error.message });
+  }
+});
 
 
 
@@ -67,7 +67,7 @@ const createCheckoutSession = catchAsync(async (req, res) => {
 
 export const paymentController = {
   createCheckoutSession,
-//   handleWebhook,
+  handleWebhook,
 //   getPaymentHistory,
 //   getPaymentDetails,
 };
