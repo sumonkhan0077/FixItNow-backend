@@ -16,6 +16,6 @@ router.post(
 
 router.get("/", auth(Role.CUSTOMER,  Role.ADMIN), paymentController.getPaymentHistory);
 
-// router.get("/:id", auth(Role.CUSTOMER, Role.ADMIN), paymentController.getPaymentDetails);
+router.get("/:id", auth(Role.CUSTOMER, Role.ADMIN), paymentController.getPaymentDetails);
 
 export const paymentRouts = router;

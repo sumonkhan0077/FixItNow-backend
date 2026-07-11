@@ -1,8 +1,9 @@
 import Stripe from "stripe";
 import config from "../../config";
 import { prisma } from "../../lib/prisma";
-import { BookingStatus, PaymentProvider, PaymentStatus } from "../../../generated/prisma/enums";
+import { BookingStatus, PaymentProvider, PaymentStatus, Role } from "../../../generated/prisma/enums";
 import { stripe } from "../../lib/stripe";
+import { Prisma } from "../../../generated/prisma/client";
 
 
 
@@ -181,9 +182,195 @@ const handleWebhook = async (
     received: true,
   };
 };
+;
+
+const getPaymentHistoryFromDB = async (
+  userId: string,
+  role: Role,
+  query: any
+) => {
+  const limit = query.limit ? Number(query.limit) : 10;
+  const page = query.page ? Number(query.page) : 1;
+  const skip = (page - 1) * limit;
+
+  const sortBy = query.sortBy || "createdAt";
+  const sortOrder = query.sortOrder || "desc";
+
+  const andConditions: Prisma.PaymentWhereInput[] = [];
+
+  // Customer can only see own payments
+  if (role === Role.CUSTOMER) {
+    andConditions.push({
+      customerId: userId,
+    });
+  }
+
+  // Admin Filters
+  if (role === Role.ADMIN) {
+    if (query.status) {
+      andConditions.push({
+        status: query.status,
+      });
+    }
+
+    if (query.provider) {
+      andConditions.push({
+        provider: query.provider,
+      });
+    }
+
+    if (query.customerId) {
+      andConditions.push({
+        customerId: query.customerId,
+      });
+    }
+
+    if (query.bookingId) {
+      andConditions.push({
+        bookingId: query.bookingId,
+      });
+    }
+  }
+
+  const where: Prisma.PaymentWhereInput =
+    andConditions.length > 0
+      ? { AND: andConditions }
+      : {};
+
+  const data = await prisma.payment.findMany({
+    where,
+    include: {
+      customer: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          profileImage: true,
+        },
+      },
+      booking: {
+        include: {
+          service: {
+            include: {
+              category: true,
+              technicianProfile: {
+                include: {
+                  user: {
+                    select: {
+                      id: true,
+                      name: true,
+                      email: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    skip,
+    take: limit,
+    orderBy: {
+      [sortBy]: sortOrder,
+    },
+  });
+
+  const total = await prisma.payment.count({
+    where,
+  });
+
+  return {
+    meta: {
+      page,
+      limit,
+      total,
+    },
+    data,
+  };
+};
+
+const getPaymentDetailsFromDB = async (
+  paymentId: string,
+  userId: string,
+  role: Role
+) => {
+  // Admin can view any payment
+  if (role === Role.ADMIN) {
+    return await prisma.payment.findUniqueOrThrow({
+      where: {
+        id: paymentId,
+      },
+      include: {
+        customer: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            profileImage: true,
+          },
+        },
+        booking: {
+          include: {
+            service: {
+              include: {
+                category: true,
+                technicianProfile: {
+                  include: {
+                    user: {
+                      select: {
+                        id: true,
+                        name: true,
+                        email: true,
+                        profileImage: true,
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+  }
+
+  // Customer can view only own payment
+  return await prisma.payment.findFirstOrThrow({
+    where: {
+      id: paymentId,
+      customerId: userId,
+    },
+    include: {
+      booking: {
+        include: {
+          service: {
+            include: {
+              category: true,
+              technicianProfile: {
+                include: {
+                  user: {
+                    select: {
+                      id: true,
+                      name: true,
+                      email: true,
+                      profileImage: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  });
+};
 
 export const paymentServices = {
   createCheckoutSession,
-  handleWebhook
+  handleWebhook,
+  getPaymentHistoryFromDB,
+  getPaymentDetailsFromDB
 
 };

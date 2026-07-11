@@ -41,33 +41,39 @@ const handleWebhook = catchAsync(async (req: Request, res: Response) => {
 
 
 
-// const getPaymentHistory = catchAsync(async (req: Request, res: Response) => {
-//   const id = req.user?.id;
-//   const result = await paymentServices.getPaymentHistory(id as string);
+const getPaymentHistory = catchAsync(async (req: Request, res: Response) => {
+  const result = await paymentServices.getPaymentHistoryFromDB(
+    req.user!.id ,
+    req.user!.role,
+    req.query
+  );
 
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: httpStatus.OK,
-//     message: "Payment history retrieved successfully",
-//     data: result,
-//   });
-// });
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Payment history retrieved successfully",
+    meta: result.meta,
+    data: result.data,
+  });
+});
 
-// const getPaymentDetails = catchAsync(async (req: Request, res: Response) => {
-//   const id = req.params.id as string;
-//   const result = await paymentServices.getPaymentDetails(id);
+const getPaymentDetails = catchAsync(async (req, res) => {
+  const result = await paymentServices.getPaymentDetailsFromDB(
+    req.params.id as string,
+    req.user!.id,
+    req.user!.role
+  );
 
-//   sendResponse(res, {
-//     success: true,
-//     statusCode: httpStatus.OK,
-//     message: "Payment details retrieved successfully",
-//     data: result,
-//   });
-// });
-
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Payment retrieved successfully",
+    data: result,
+  });
+});
 export const paymentController = {
   createCheckoutSession,
   handleWebhook,
-//   getPaymentHistory,
-//   getPaymentDetails,
+  getPaymentHistory,
+  getPaymentDetails,
 };
