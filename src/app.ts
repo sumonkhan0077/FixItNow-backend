@@ -13,6 +13,7 @@ import { bookingRoutes } from "./modules/booking/booking.route";
 import { reviewRoutes } from "./modules/review/review.route";
 import { availabilityRoutes } from "./modules/technicianAvailability/technicianAvailability.route";
 import { paymentRouts } from "./modules/payment/payment.route";
+import { paymentController } from "./modules/payment/payment.controller";
 
 
 const app : Application = express();
@@ -21,6 +22,14 @@ app.use(cors({
     origin: config.app_url,
     credentials: true,
 }))
+
+
+app.post(
+  "/api/payments/confirm",
+  express.raw({ type: "application/json" }),
+  paymentController.handleWebhook,
+);
+
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
@@ -38,7 +47,6 @@ app.use("/api/categories", categoriesRoutes)
 app.use("/api/services", servicesRoutes)
 app.use("/api/bookings", bookingRoutes)
 app.use("/api/reviews", reviewRoutes)
-
 app.use("/api/payments", paymentRouts)
 
 
