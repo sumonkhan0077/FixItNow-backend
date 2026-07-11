@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import { prisma } from "../../lib/prisma";
 import config from "../../config";
 import { IUserQuery, RegisterUserPayload, UpdateUserStatusPayload } from "./user.interface";
-import { Prisma } from "../../../generated/prisma/browser";
+import { Prisma, Role } from "../../../generated/prisma/browser";
 
 const registerUserIntoDB = async (payload: RegisterUserPayload) => {
   const { name, email, password, role , profileImage } = payload;
@@ -167,9 +167,43 @@ const updateUserStatusIntoDB = async (
   return result;
 };
 
+const updateUserRoleIntoDB = async (
+  userId: string,
+  role: Role
+) => {
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      id: userId,
+    },
+  });
+
+  if (user.role === role) {
+    throw new Error(`User is already a ${role}`);
+  }
+
+  const result = await prisma.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      role,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      status: true,
+    },
+  });
+
+  return result;
+};
+
 export const userService = {
   registerUserIntoDB,
   getMyProfileFromDB,
   getAllUsersFromDB,
   updateUserStatusIntoDB,
+  updateUserRoleIntoDB,
 };
