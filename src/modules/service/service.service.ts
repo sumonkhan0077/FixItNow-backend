@@ -123,8 +123,24 @@ const getAllServicesFromDB = async (query: IServicesQuery) => {
               password: true,
             },
           },
+          availabilities: {
+            select: {
+              dayOfWeek: true,
+              startTime: true,
+              endTime: true,
+            },
+            orderBy: [
+              {
+                dayOfWeek: "asc",
+              },
+              {
+                startTime: "asc",
+              },
+            ],
+          },
         },
       },
+      
     },
     where: {
       AND: andConditions,

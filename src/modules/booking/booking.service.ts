@@ -41,30 +41,28 @@ const createBookingIntoDB = async (
   // Booking Date
   const bookingDate = new Date(payload.bookingDate);
 
-  // Day Of Week
+  // Day of Week
   const bookingDay = bookingDate
     .toLocaleDateString("en-US", {
       weekday: "long",
     })
     .toUpperCase() as DayOfWeek;
 
-  // Split Time Slot
-  const [startTime, endTime] = payload.timeSlot.split("-");
-
   // Availability Check
   const availability = await prisma.availability.findFirst({
     where: {
       technicianProfileId: technician.id,
       dayOfWeek: bookingDay,
-      startTime,
-      endTime,
       isAvailable: true,
     },
   });
 
   if (!availability) {
-    throw new Error("Technician is not available at this time slot");
+    throw new Error("Technician is not available on this day");
   }
+
+  // Auto Time Slot
+  const timeSlot = `${availability.startTime}-${availability.endTime}`;
 
   // Booking Create
   const result = await prisma.booking.create({
@@ -72,16 +70,29 @@ const createBookingIntoDB = async (
       customerId,
       serviceId: payload.serviceId,
       bookingDate,
-      timeSlot: payload.timeSlot,
+      timeSlot,
       address: payload.address,
       totalAmount: service.price,
       status: BookingStatus.REQUESTED,
     },
     include: {
-      customer: true,
+      customer: {
+        omit: {
+          password: true,
+        },
+      },
       service: {
         include: {
           category: true,
+          technicianProfile: {
+            include: {
+              user: {
+                omit: {
+                  password: true
+                },
+              },
+            },
+          },
         },
       },
     },
