@@ -1,0 +1,1596 @@
+{
+  "info": {
+    "_postman_id": "4038204a-96d9-49b9-a45b-721f6c11cd69",
+    "name": "FixitNow service",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53825798",
+    "_collection_link": "https://go.postman.co/collection/53825798-4038204a-96d9-49b9-a45b-721f6c11cd69?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "users",
+      "item": [
+        {
+          "name": "register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"sumon\",\r\n    \"email\": \"asdf5@gmail.com\",\r\n    \"password\": \"12345\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/users/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "users",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "profile get",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}api/users/me",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "users",
+                "me"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all users (admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}api/users/all-users",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "users",
+                "all-users"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "searchTerm",
+                  "value": "sumon",
+                  "disabled": true
+                },
+                {
+                  "key": "role",
+                  "value": "TECHNICIAN",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "ACTIVE",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "name",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "user status update(admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\":\"BANNED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/users/status/id",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "users",
+                "status",
+                "id"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "searchTerm",
+                  "value": "sumon",
+                  "disabled": true
+                },
+                {
+                  "key": "role",
+                  "value": "TECHNICIAN",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "ACTIVE",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "name",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "user role update(admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"role\":\"TECHNICIAN\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/users/:id",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "users",
+                ":id"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "searchTerm",
+                  "value": "sumon",
+                  "disabled": true
+                },
+                {
+                  "key": "role",
+                  "value": "TECHNICIAN",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "ACTIVE",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "name",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc",
+                  "type": "text",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "id",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "auth",
+      "item": [
+        {
+          "name": "login",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"admin123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://fix-it-now-backend-ten.vercel.app/api/auth/login",
+              "protocol": "https",
+              "host": [
+                "fix-it-now-backend-ten",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "register",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"admin\",\r\n    \"email\": \"admin@gmail.com\",\r\n    \"password\": \"admin123\",\r\n    \"role\":\"ADMIN\"\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/users/register",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "users",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "refresh-token",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}api/auth/refresh-token",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "auth",
+                "refresh-token"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "technician-profile",
+      "item": [
+        {
+          "name": "profile-create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"bio\": \"Professional Painting with 4 years of experience.\",\r\n  \"experience\": 4,\r\n  \"serviceArea\": \"Dhaka\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/technician-profile/create",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "technician-profile",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "updated-profile",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"bio\": \"Electrician\",\r\n  \"experience\": 8,\r\n  \"serviceArea\": \"Dhaka\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/technician-profile/update-profile",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "technician-profile",
+                "update-profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "my-profile-get",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"asdf@gmail.com\",\r\n    \"password\": \"12345\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseURL}}api/technician-profile/my-profile",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "technician-profile",
+                "my-profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all technician profie(admin)",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"asdf@gmail.com\",\r\n    \"password\": \"12345\"\r\n}"
+            },
+            "url": {
+              "raw": "https://fix-it-now-backend-ten.vercel.app/api/technician-profile/all",
+              "protocol": "https",
+              "host": [
+                "fix-it-now-backend-ten",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "technician-profile",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "sortBy",
+                  "value": "averageRating",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc",
+                  "disabled": true
+                },
+                {
+                  "key": "experience",
+                  "value": "5",
+                  "disabled": true
+                },
+                {
+                  "key": "rating",
+                  "value": "4",
+                  "disabled": true
+                },
+                {
+                  "key": "serviceArea",
+                  "value": "dhaka",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-technician-profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}api/technician-profile/:technicianiId",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "technician-profile",
+                ":technicianiId"
+              ],
+              "variable": [
+                {
+                  "key": "technicianiId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "category",
+      "item": [
+        {
+          "name": "add-category",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"Glass & Aluminum\",\r\n  \"description\": \"Glass Installation, Aluminum Work\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/categories/create",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "categories",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get all categori",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}api/categories/all",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "categories",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "categori delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/categories/delete/0024uojofou",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "categories",
+                "delete",
+                "0024uojofou"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "services",
+      "item": [
+        {
+          "name": "services-create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"categoryId\": \"7ce899fb-454d-44e0-9d60-50369ad048fd\",\r\n  \"title\": \"Painting\",\r\n  \"description\": \"Interior Painting, Exterior Painting \",\r\n  \"price\": 2200\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/services/create",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "services",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "services-all-get",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"categoryId\": \"2b1617a6-5278-4304-8cda-75d92ae76d4d\",\r\n  \"title\": \"AC Repair\",\r\n  \"description\": \"Repair all AC brands\",\r\n  \"price\": 1200\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://fix-it-now-backend-ten.vercel.app/api/services/all",
+              "protocol": "https",
+              "host": [
+                "fix-it-now-backend-ten",
+                "vercel",
+                "app"
+              ],
+              "path": [
+                "api",
+                "services",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "minPrice",
+                  "value": "500",
+                  "disabled": true
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "1500",
+                  "disabled": true
+                },
+                {
+                  "key": "searchTerm",
+                  "value": "ac",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "price",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "2",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "serviceArea",
+                  "value": "pabna",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get-my-all-services(technician)",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"categoryId\": \"2b1617a6-5278-4304-8cda-75d92ae76d4d\",\r\n  \"title\": \"AC Repair\",\r\n  \"description\": \"Repair all AC brands\",\r\n  \"price\": 1200\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/services/my-service",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "services",
+                "my-service"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "services-update",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"categoryId\": \"2b1617a6-5278-4304-8cda-75d92ae76d4d\",\r\n  \"title\": \"fan Repair\",\r\n  \"description\": \"Repair all fan brands\",\r\n  \"price\": 6200\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/services/:serviceId",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "services",
+                ":serviceId"
+              ],
+              "variable": [
+                {
+                  "key": "serviceId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get single service",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"categoryId\": \"2b1617a6-5278-4304-8cda-75d92ae76d4d\",\r\n  \"title\": \"AC Repair\",\r\n  \"description\": \"Repair all AC brands\",\r\n  \"price\": 1200\r\n}"
+            },
+            "url": {
+              "raw": "{{baseURL}}api/services/:serviceId",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "services",
+                ":serviceId"
+              ],
+              "variable": [
+                {
+                  "key": "serviceId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "service delete",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}api/services/delete/:serviceId",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "services",
+                "delete",
+                ":serviceId"
+              ],
+              "variable": [
+                {
+                  "key": "serviceId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "booking",
+      "item": [
+        {
+          "name": "booking-create",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"serviceId\": \"7272e3b6-20ee-4cb7-9423-dd86b015f93d\",\r\n  \"bookingDate\": \"2026-07-19\",\r\n  \"address\": \"pabna\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:5000/api/bookings/create",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "bookings",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "booking-cancel-customar",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"status\": \"CANCELLED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/bookings/:bookingID",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "bookings",
+                ":bookingID"
+              ],
+              "variable": [
+                {
+                  "key": "bookingID",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "booking-status-update-technician",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"status\": \"ACCEPTED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/bookings/update-status/:bookingId",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "bookings",
+                "update-status",
+                ":bookingId"
+              ],
+              "variable": [
+                {
+                  "key": "bookingId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "my-bookings(customar)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:5000/api/bookings/my-bookings",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "5000",
+              "path": [
+                "api",
+                "bookings",
+                "my-bookings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "searchTerm",
+                  "value": "fan",
+                  "disabled": true
+                },
+                {
+                  "key": "role",
+                  "value": "TECHNICIAN",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "ACTIVE",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "name",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "technician-bookings-get",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}api/bookings/technician-bookings",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "bookings",
+                "technician-bookings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "searchTerm",
+                  "value": "fan",
+                  "disabled": true
+                },
+                {
+                  "key": "role",
+                  "value": "TECHNICIAN",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "ACTIVE",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "name",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "all-booking-get(admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}api/bookings/all-bookings",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "bookings",
+                "all-bookings"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "searchTerm",
+                  "value": "fan",
+                  "disabled": true
+                },
+                {
+                  "key": "role",
+                  "value": "TECHNICIAN",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "COMPLETED",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "name",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "asc",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "customerId",
+                  "value": "customer.id",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "technicianId",
+                  "value": "technician-profile-id",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "minPrice",
+                  "value": "344",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "maxPrice",
+                  "value": "999",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "bookingDate",
+                  "value": "2026-07-10",
+                  "type": "text",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "single booking get",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}api/bookings/:bookingId",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "bookings",
+                ":bookingId"
+              ],
+              "variable": [
+                {
+                  "key": "bookingId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "reviews",
+      "item": [
+        {
+          "name": "create-review",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"bookingId\":\"dc57dd66-1ca2-47a7-a0ab-6908cdddba95\",\r\n  \"rating\": 5,\r\n  \"comment\": \"Excellent service!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/reviews/create",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "reviews",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "review delete(admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"bookingId\":\"c59870f6-f1aa-4887-b018-5a4a1b0931d3\",\r\n  \"rating\": 5,\r\n  \"comment\": \"Excellent service!\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/reviews/delete/:reviewId",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "reviews",
+                "delete",
+                ":reviewId"
+              ],
+              "variable": [
+                {
+                  "key": "reviewId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get single review",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}api/reviews/:reviewId",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "reviews",
+                ":reviewId"
+              ],
+              "variable": [
+                {
+                  "key": "reviewId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "review all (admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseURL}}api/reviews/all",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "reviews",
+                "all"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "searchTerm",
+                  "value": "excellent",
+                  "disabled": true
+                },
+                {
+                  "key": "rating",
+                  "value": "5",
+                  "disabled": true
+                },
+                {
+                  "key": "customerId",
+                  "value": "customer-id",
+                  "disabled": true
+                },
+                {
+                  "key": "technicianProfileId",
+                  "value": "technician-profile-id",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "rating",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "technician availability time",
+      "item": [
+        {
+          "name": "create Availability time",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"dayOfWeek\": \"FRIDAY\",\r\n  \"startTime\": \"8:00\",\r\n  \"endTime\": \"16:00\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/availability/create",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "availability",
+                "create"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get availability time",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"dayOfWeek\": \"SATURDAY\",\r\n  \"startTime\": \"14:00\",\r\n  \"endTime\": \"16:00\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseURL}}api/availability/my-slots",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "availability",
+                "my-slots"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "update slot time",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"dayOfWeek\": \"SUNDAY\",\r\n  \"startTime\": \"6:00\",\r\n  \"endTime\": \"16:00\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseURL}}api/availability/update-slot/:TimeID",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "availability",
+                "update-slot",
+                ":TimeID"
+              ],
+              "variable": [
+                {
+                  "key": "TimeID",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "delete slot",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"dayOfWeek\": \"SATURDAY\",\r\n  \"startTime\": \"14:00\",\r\n  \"endTime\": \"16:00\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseURL}}api/availability/:timeId",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "availability",
+                ":timeId"
+              ],
+              "variable": [
+                {
+                  "key": "timeId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "payment",
+      "item": [
+        {
+          "name": "checkout section",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "{{baseURL}}api/payments/create-checkout-session/:bookingId",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "payments",
+                "create-checkout-session",
+                ":bookingId"
+              ],
+              "variable": [
+                {
+                  "key": "bookingId",
+                  "value": ""
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "get payment history",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"serviceId\": \"7272e3b6-20ee-4cb7-9423-dd86b015f93d\",\r\n  \"bookingDate\": \"2026-07-19\",\r\n  \"address\": \"pabna\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseURL}}api/payments/",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "payments",
+                ""
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "COMPLETED",
+                  "disabled": true
+                },
+                {
+                  "key": "provider",
+                  "value": "STRIPE",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "customerId",
+                  "value": "xxxx",
+                  "disabled": true
+                },
+                {
+                  "key": "bookingId",
+                  "value": "xxxx",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "paidAt",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc",
+                  "disabled": true
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "payment details single",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"serviceId\": \"7272e3b6-20ee-4cb7-9423-dd86b015f93d\",\r\n  \"bookingDate\": \"2026-07-19\",\r\n  \"address\": \"pabna\"\r\n}"
+            },
+            "url": {
+              "raw": "{{baseURL}}api/payments/:paymetId",
+              "host": [
+                "{{baseURL}}api"
+              ],
+              "path": [
+                "payments",
+                ":paymetId"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "limit",
+                  "value": "10",
+                  "disabled": true
+                },
+                {
+                  "key": "status",
+                  "value": "COMPLETED",
+                  "disabled": true
+                },
+                {
+                  "key": "provider",
+                  "value": "STRIPE",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "customerId",
+                  "value": "xxxx",
+                  "disabled": true
+                },
+                {
+                  "key": "bookingId",
+                  "value": "xxxx",
+                  "disabled": true
+                },
+                {
+                  "key": "sortBy",
+                  "value": "paidAt",
+                  "disabled": true
+                },
+                {
+                  "key": "sortOrder",
+                  "value": "desc",
+                  "disabled": true
+                }
+              ],
+              "variable": [
+                {
+                  "key": "paymetId",
+                  "value": "5e643722-6912-4c72-a2e7-b675459bb903"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
