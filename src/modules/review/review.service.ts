@@ -87,7 +87,7 @@ const createReviewIntoDB = async (
 };
 
 const deleteReviewFromDB = async (reviewId: string) => {
-  // Review আছে কিনা
+  // Review have?
   const review = await prisma.review.findUnique({
     where: {
       id: reviewId,
@@ -98,14 +98,12 @@ const deleteReviewFromDB = async (reviewId: string) => {
     throw new Error("Review not found");
   }
 
-  // আগে Delete করো
   await prisma.review.delete({
     where: {
       id: reviewId,
     },
   });
 
-  // বাকি Review-এর Average বের করো
   const result = await prisma.review.aggregate({
     where: {
       technicianProfileId: review.technicianProfileId,

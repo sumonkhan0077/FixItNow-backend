@@ -29,7 +29,36 @@ const getAllCategoriesFromDB = async () => {
   return result;
 };
 
+const deleteCategoryFromDB = async (categoryId: string) => {
+ 
+  await prisma.category.findUniqueOrThrow({
+    where: {
+      id: categoryId,
+    },
+  });
+
+
+  const serviceExists = await prisma.service.findFirst({
+    where: {
+      categoryId,
+    },
+  });
+
+  if (serviceExists) {
+    throw new Error(
+      "Cannot delete category because it has services."
+    );
+  }
+
+  return await prisma.category.delete({
+    where: {
+      id: categoryId,
+    },
+  });
+};
+
 export const categoryService = {
   createCategoryIntoDB,
   getAllCategoriesFromDB,
+  deleteCategoryFromDB,
 };

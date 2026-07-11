@@ -76,7 +76,7 @@ const getSingleService = catchAsync(
   }
 );
 
-const deleteService = catchAsync(async (req, res) => {
+const deleteService = catchAsync(async (req: Request, res: Response) => {
   const result = await serviceService.deleteServiceFromDB(
     req.user!.id,
     req.user!.role,
