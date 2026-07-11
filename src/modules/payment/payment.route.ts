@@ -7,9 +7,9 @@ import { paymentController } from "./payment.controller";
 const router = Router();
 
 router.post(
-  "/create",
-  auth(Role.CUSTOMER , Role.ADMIN),
-  paymentController.createCheckoutSession,
+  "/create-checkout-session/:bookingId",
+  auth(Role.CUSTOMER, Role.ADMIN),
+  paymentController.createCheckoutSession
 );
 
 // router.get("/", auth(Role.CUSTOMER,  Role.ADMIN), paymentController.getPaymentHistory);
