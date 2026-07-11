@@ -1,5 +1,9 @@
 import { Prisma } from "../../../generated/prisma/browser";
-import { BookingStatus, Role } from "../../../generated/prisma/enums";
+import {
+  BookingStatus,
+  DayOfWeek,
+  Role,
+} from "../../../generated/prisma/enums";
 import { prisma } from "../../lib/prisma";
 import {
   CreateBookingPayload,
@@ -23,17 +27,54 @@ const createBookingIntoDB = async (
     throw new Error("Service not found");
   }
 
+  // Technician Profile
+  const technician = await prisma.technicianProfile.findUnique({
+    where: {
+      id: service.technicianProfileId,
+    },
+  });
+
+  if (!technician) {
+    throw new Error("Technician not found");
+  }
+
+  // Booking Date
+  const bookingDate = new Date(payload.bookingDate);
+
+  // Day Of Week
+  const bookingDay = bookingDate
+    .toLocaleDateString("en-US", {
+      weekday: "long",
+    })
+    .toUpperCase() as DayOfWeek;
+
+  // Split Time Slot
+  const [startTime, endTime] = payload.timeSlot.split("-");
+
+  // Availability Check
+  const availability = await prisma.availability.findFirst({
+    where: {
+      technicianProfileId: technician.id,
+      dayOfWeek: bookingDay,
+      startTime,
+      endTime,
+      isAvailable: true,
+    },
+  });
+
+  if (!availability) {
+    throw new Error("Technician is not available at this time slot");
+  }
+
+  // Booking Create
   const result = await prisma.booking.create({
     data: {
       customerId,
       serviceId: payload.serviceId,
-      bookingDate: new Date(payload.bookingDate),
+      bookingDate,
       timeSlot: payload.timeSlot,
       address: payload.address,
-
-      // Service price to booking price
       totalAmount: service.price,
-
       status: BookingStatus.REQUESTED,
     },
     include: {
